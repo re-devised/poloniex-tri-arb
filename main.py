@@ -58,16 +58,21 @@ def step_2():
         surface_arb = func_arbitrage.calc_triangular_arb_surface_rate(t_pair, prices_dict)
         if len(surface_arb) > 0:
             real_rate_arb = func_arbitrage.get_depth_from_orderbook(surface_arb)
-            print(real_rate_arb)
+            if len(real_rate_arb):
+                print(real_rate_arb)
             time.sleep(2)
 
 """ MAIN """
+import os.path
 if __name__ == "__main__":
-    print("Retrieving list of cryptos...")
-    coin_list = step_0()
 
-    print("Structuring cryptos into triangular pairs (2 mins)...")
-    structured_pairs = step_1(coin_list)
+    # Check if already Triangular Pairs File and if not, create one
+    if not os.path.isfile("structured_triangular_pairs.json"):
+        print("Retrieving list of cryptos...")
+        coin_list = step_0()
+
+        print("Structuring cryptos into triangular pairs (2 mins)...")
+        step_1(coin_list)
 
     print("Running scanning algorithm (will run until killed)...")
     while True:
